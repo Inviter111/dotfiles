@@ -1,0 +1,17 @@
+alias intel='arch -x86_64 zsh'
+alias arm='arch -arm64 zsh'
+alias go_amd='export GOARCH=amd64'
+alias go_arm='export GOARCH=arm64'
+alias vim=nvim
+alias tf=terraform
+alias sleepin='sudo shutdown -s'
+alias chrome='open -a "Google Chrome"'
+alias nwjs='/Users/inv/Downloads/asd/nwjs/nwjs.app/Contents/MacOS/nwjs'
+alias nwjs-opt='/Users/inv/Downloads/asd/nwjs/nwjs.app/Contents/MacOS/nwjs --use-gl=egl --ignore-gpu-blacklist --disable-accelerated-2d-canvas --num-raster-threads=2'
+alias nwjs-m1='/Users/inv/Downloads/asd/nwjs-m1/nwjs.app/Contents/MacOS/nwjs'
+alias nwjs-m1-opt='/Users/inv/Downloads/asd/nwjs-m1/nwjs.app/Contents/MacOS/nwjs --use-gl=egl --ignore-gpu-blacklist --disable-accelerated-2d-canvas --num-raster-threads=2'
+alias path='echo -e ${PATH//:/\\n}'
+alias work='cd /Users/inv/projects/playnautica'
+alias python='python3.11'
+alias xc='pbcopy'
+alias xp='pbpaste'
