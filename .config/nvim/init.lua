@@ -17,15 +17,20 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-  { import = 'plugins' },
+  spec = {
+    { import = 'plugins' },
+  },
+  change_detection = {
+    notify = false,
+  },
 }, {})
 
-require('set')
-require('remap')
-require('functions')
-require('health')
+require 'set'
+require 'remap'
+require 'functions'
+require 'health'
 require('neodev').setup()
-require('snippets')
+require 'snippets'
 
 -- [[ Highlight on yank ]]
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

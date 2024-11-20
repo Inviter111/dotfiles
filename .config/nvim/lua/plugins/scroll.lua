@@ -1,0 +1,23 @@
+return {
+  -- 'declancm/cinnamon.nvim',
+  -- version = '*', -- use latest release
+  -- opts = {},
+  -- config = function()
+  --   local cinnamon = require 'cinnamon'
+  --   cinnamon.setup {
+  --     options = {
+  --       delay = 4,
+  --       max_delta = {
+  --         time = 2000,
+  --       }
+  --     },
+  --   }
+  --
+  --   vim.keymap.set('n', '<C-U>', function()
+  --     cinnamon.scroll '<C-U>zz'
+  --   end)
+  --   vim.keymap.set('n', '<C-D>', function()
+  --     cinnamon.scroll '<C-D>zz'
+  --   end)
+  -- end,
+}

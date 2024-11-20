@@ -2,18 +2,19 @@
 return {
   'stevearc/oil.nvim',
   opts = {},
-  dependencies = { "nvim-tree/nvim-web-devicons", "echasnovski/mini.nvim" },
+  dependencies = { 'nvim-tree/nvim-web-devicons', 'echasnovski/mini.icons' },
   config = function ()
-    require('oil').setup({
+    require('mini.icons').setup {}
+    require('oil').setup {
       default_file_explorer = true,
       columns = {
-        "size",
-        "mtime",
-        "icon",
+        'size',
+        'mtime',
+        'icon',
       },
       view_options = {
         show_hidden = true,
       },
-    })
+    }
   end,
 }

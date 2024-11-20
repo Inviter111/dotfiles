@@ -1,9 +1,24 @@
-[font]
-
-normal.family = "JetBrainsMono NFM"
-bold.family = "JetBrainsMono NFM"
-italic.family = "JetBrainsMono NFM"
-bold_italic.family = "JetBrainsMono NFM"
-
 [env]
 TERM = "screen-256color"
+
+[window]
+padding.x = 10
+padding.y = 10
+
+# decorations = "Buttonless"
+
+opacity = 0.7
+blur = true
+
+option_as_alt = "Both"
+
+[font]
+size = 14
+
+normal.family = "Monaco Nerd Font"
+
+bold.family = "Monaco Nerd Font"
+
+bold_italic.family = "Monaco Nerd Font"
+
+italic.family = "Monaco Nerd Font"

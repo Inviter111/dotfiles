@@ -9,6 +9,10 @@ return {
         python = { 'isort', 'black' },
         javascript = { 'prettierd' },
         typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        rust = { 'rustfmt', lsp_format = 'fallback' },
+        go = { 'goimports', 'gofmt' },
+        zig = { 'zigfmt' },
       },
       formatters = {
         prettierd = {
@@ -20,7 +24,7 @@ return {
     }
 
     local format = function()
-      conform.format()
+      conform.format { async = true, lsp_fallback = true }
       require('lint').try_lint()
     end
 

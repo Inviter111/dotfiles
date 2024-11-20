@@ -3,15 +3,16 @@ return {
   'neovim/nvim-lspconfig',
   dependencies = {
     -- Automatically install LSPs to stdpath for neovim
-    { 'williamboman/mason.nvim', config = true },
+    { 'williamboman/mason.nvim', opts = { PATH = 'append' } },
     'williamboman/mason-lspconfig.nvim',
 
     -- Useful status updates for LSP
     -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-    { 'j-hui/fidget.nvim',       opts = {} },
+    { 'j-hui/fidget.nvim', opts = {} },
 
     -- Additional lua configuration, makes nvim stuff amazing!
     'folke/neodev.nvim',
+    { 'mrcjkb/rustaceanvim', version = '^5', lazy = false },
   },
   -- [[ Configure LSP ]]
   --  This function gets run when an LSP connects to a particular buffer.
@@ -58,23 +59,10 @@ return {
         vim.lsp.buf.format()
       end, { desc = 'Format current buffer with LSP' })
     end
-    require('which-key').register {
-      ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-      ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-      ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-      ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-      ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-      ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-      ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-      ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      ['<leader>q'] = { name = '[Q]uickfix list', _ = 'which_key_ignore' },
-    }
-    -- register which-key VISUAL mode
-    -- required for visual <leader>hs (hunk stage) to work
-    require('which-key').register({
-      ['<leader>'] = { name = 'VISUAL <leader>' },
-      ['<leader>h'] = { 'Git [H]unk' },
-    }, { mode = 'v' })
+
+    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+
     require('mason').setup()
     require('mason-lspconfig').setup()
     -- require('typescript-tools').setup({
@@ -85,10 +73,12 @@ return {
     local servers = {
       -- clangd = {},
       gopls = {},
-      -- pyright = {},
-      rust_analyzer = {},
+      pyright = {},
+      rust_analyzer = { _ignore = true },
       html = { filetypes = { 'html', 'twig', 'hbs' } },
-      tsserver = {},
+      ts_ls = { _ignore = true },
+      vtsls = {},
+      zls = {},
 
       lua_ls = {
         Lua = {
@@ -113,6 +103,9 @@ return {
 
     mason_lspconfig.setup_handlers {
       function(server_name)
+        if servers[server_name] and servers[server_name]._ignore == true then
+          return
+        end
         require('lspconfig')[server_name].setup {
           capabilities = capabilities,
           on_attach = on_attach,
@@ -120,6 +113,21 @@ return {
           filetypes = (servers[server_name] or {}).filetypes,
         }
       end,
+    }
+
+    -- Elixir LSP
+    require('lspconfig').elixirls.setup {
+      cmd = { os.getenv 'HOME' .. '/.config/elixir-ls/language_server.sh' },
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+
+    -- Rust
+    vim.g.rustaceanvim = {
+      server = {
+        on_attach = on_attach,
+        capabilities = vim.lsp.protocol.make_client_capabilities(),
+      },
     }
   end,
 }
