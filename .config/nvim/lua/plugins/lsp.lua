@@ -77,7 +77,7 @@ return {
       rust_analyzer = { _ignore = true },
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       ts_ls = { _ignore = true },
-      vtsls = {},
+      vtsls = { vtsls = { autoUseWorkspaceTsdk = true } },
       zls = {},
 
       lua_ls = {
@@ -94,26 +94,42 @@ return {
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+    -- Filter out ignored servers
+    local active_servers = {}
+    for server_name, server_config in pairs(servers) do
+      if not server_config._ignore then
+        active_servers[server_name] = server_config
+      end
+    end
+
     -- Ensure the servers above are installed
     local mason_lspconfig = require 'mason-lspconfig'
 
     mason_lspconfig.setup {
-      ensure_installed = vim.tbl_keys(servers),
+      ensure_installed = vim.tbl_keys(active_servers),
     }
 
-    mason_lspconfig.setup_handlers {
-      function(server_name)
-        if servers[server_name] and servers[server_name]._ignore == true then
-          return
-        end
-        require('lspconfig')[server_name].setup {
-          capabilities = capabilities,
-          on_attach = on_attach,
-          settings = servers[server_name],
-          filetypes = (servers[server_name] or {}).filetypes,
+    -- Setup LSP servers using vim.lsp.config
+    for server_name, server_config in pairs(active_servers) do
+      vim.lsp.config[server_name] = {
+        cmd = server_config.cmd,
+        root_markers = server_config.root_markers,
+        filetypes = server_config.filetypes,
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = server_config,
+      }
+    end
+
+    -- Disable ignored servers by setting empty filetypes
+    for server_name, server_config in pairs(servers) do
+      if server_config._ignore then
+        vim.lsp.config[server_name] = {
+          filetypes = {},  -- Empty filetypes prevents auto-start
+          autostart = false,
         }
-      end,
-    }
+      end
+    end
 
     -- Elixir LSP
     require('lspconfig').elixirls.setup {

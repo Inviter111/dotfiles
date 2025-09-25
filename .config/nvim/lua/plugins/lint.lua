@@ -2,17 +2,20 @@ return {
   'mfussenegger/nvim-lint',
   opts = {},
   config = function()
-    require('lint').linters_by_ft = {
-      javascript = { 'eslint_d' },
-      typescript = { 'eslint_d' },
+    local lint = require('lint')
+    lint.linters_by_ft = {
+      javascript = { 'eslint' },
+      typescript = { 'eslint' },
     }
 
-    local ns = require('lint').get_namespace('eslint_d')
+    local ns = lint.get_namespace('eslint')
     vim.diagnostic.config({ virtual_text = false }, ns)
+
+    lint.linters.eslint.ignore_exitcode = true
 
     vim.api.nvim_create_autocmd({ "BufRead", "InsertLeave", "BufWritePost" }, {
       callback = function()
-        require('lint').try_lint()
+        lint.try_lint()
       end,
     })
   end,
